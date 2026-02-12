@@ -1,0 +1,20 @@
+AUTHENTICATION FLOW TEST OUTPUT 
+
+Test 1: POST /auth/login
+Command: curl -X POST http://localhost:3000/auth/login -H "Content-Type: application/json" -d '{"email":"test@example.com","password":"password123"}'
+{"message":"OTP sent","loginSessionId":"n2xuk9"}
+
+Server Console Output:
+[OTP]: 949532 Session n2xuk9 generated
+
+Test 2: POST /auth/verify-otp
+Command: curl -c cookies.txt -X POST http://localhost:3000/auth/verify-otp -H "Content-Type: application/json" -d '{"loginSessionId":"n2xuk9","otp":"949532"}'
+{"message":"OTP verified","sessionId":"n2xuk9"}
+
+Test 3: POST /auth/token
+Command: curl -b cookies.txt -X POST http://localhost:3000/auth/token
+{"access_token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RAZXhhbXBsZS5jb20iLCJzZXNzaW9uSWQiOiJuMnh1azkiLCJpYXQiOjE3NzA5MTY1MTgsImV4cCI6MTc3MDkxNzQxOH0.NkVVDUEKhhE8S5ehTjxmKTowcXrW-t6uQSu-Pq0haxY","expires_in":900}
+
+Test 4: GET /protected
+Command: curl -H "Authorization: Bearer <jwt>" http://localhost:3000/protected
+{"message":"Access granted","user":{"email":"test@example.com","sessionId":"n2xuk9","iat":1770916518,"exp":1770917418},"success_flag":"FLAG-dGVzdEBleGFtcGxlLmNvbV9DT01QTEVURURfQVNTSUdOTUVOVA=="}
